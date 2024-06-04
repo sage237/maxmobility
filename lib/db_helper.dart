@@ -1,13 +1,13 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:sqflite/sqflite.dart' as sql;
+
 class SQLHelper {
   ///Creates a table named students
   static Future<void> createTables(sql.Database database, int version) async {
     await database.execute(
-        '''CREATE TABLE MEMBERS (MEMBERID INT PRIMARY KEY,MEMBERNAME TEXT,MEMBERMOBILE TEXT,MEMBEREMAIL TEXT,GEOLAT TEXT,GEOLONG TEXT)''');
-      }
-
+        '''CREATE TABLE MEMBERS (MEMBERID INTEGER PRIMARY KEY AUTOINCREMENT ,MEMBERNAME TEXT,MEMBERMOBILE TEXT,MEMBEREMAIL TEXT,GEOLAT TEXT,GEOLONG TEXT)''');
+  }
 
   static Future<sql.Database> db() async {
     return sql.openDatabase(
@@ -16,21 +16,27 @@ class SQLHelper {
       onCreate: createTables,
     );
   }
-  static Future<void> addUsers(var element) async {
-    final db=await SQLHelper.db();
+
+  static Future<void> addUsers(
+      {required String name,
+      required String mobile,
+      required String email,
+      required String lat,
+      required String long}) async {
+    final db = await SQLHelper.db();
     // db.delete('TouristplaceMst');
-   var id=await db.insert('MEMBERS', {
-
-      'MEMBERNAME':'${element['MEMBERNAME']}',
-      'MEMBERMOBILE':'${element['MEMBERMOBILE']}',
-      'MEMBEREMAIL':'${element['MEMBEREMAIL']}',
-      'GEOLAT':'${element['GEOLAT']}',
-      'GEOLONG':'${element['GEOLONG']}',
-
+    var id = await db.insert('MEMBERS', {
+      'MEMBERID':null,
+      'MEMBERNAME': '$name',
+      'MEMBERMOBILE': '$mobile',
+      'MEMBEREMAIL': '$email',
+      'GEOLAT': '$lat',
+      'GEOLONG': '$long',
     });
+
+    log('Id $id dbs: ${await db.query('MEMBERS')}');
     await saveImage(id);
   }
-
 
   static Future<List<Map<String, Object?>>> getAllUsers() async {
     // log('cate $cateId Lang $selectedLang');
@@ -39,21 +45,16 @@ class SQLHelper {
     // log('Place List $data');
 
     return await db.query(
-        'MEMBERS',
+      'MEMBERS',
     );
   }
 
-
-
-
-  static Future<void> deleteUeseTable()async {
-    final db=await SQLHelper.db();
+  static Future<void> deleteUeseTable() async {
+    final db = await SQLHelper.db();
     db.delete('MEMBERS');
   }
 
-
   static saveImage(int id) {}
-
 }
 // Future<void> download(String url) async {
 //

@@ -72,7 +72,7 @@ class AddUserPageView extends StatelessWidget {
                                 Icons.person,
                                 color: Colors.blue,
                               ),
-                              labelText: "Name",
+                              labelText: "Full Name",
                               labelStyle: TextStyle(color: Colors.blue)),
                         ),
                         TextFormField(
@@ -116,6 +116,31 @@ class AddUserPageView extends StatelessWidget {
                                 color: Colors.blue,
                               ),
                               labelText: "Email",
+                              labelStyle: TextStyle(color: Colors.blue)),
+                        ),
+                        TextFormField(
+                          controller: _addUserPageController.address,
+                          cursorColor: Colors.blue,
+                          minLines: 1, maxLines: 3,
+                          // keyboardType: TextInputType.number,
+                          // inputFormatters: [
+                          //   FilteringTextInputFormatter.digitsOnly,
+                          //   LengthLimitingTextInputFormatter(10)
+                          // ],
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Required";
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                              focusedBorder: UnderlineInputBorder(),
+                              prefixIcon: Icon(
+                                Icons.home_work_outlined,
+                                color: Colors.blue,
+                              ),
+                              labelText: "Address",
+                              // labelText: "Password",
                               labelStyle: TextStyle(color: Colors.blue)),
                         ),
                         TextFormField(
@@ -169,8 +194,8 @@ class AddUserPageView extends StatelessWidget {
                         TextFormField(
                           controller: _addUserPageController.img,
                           cursorColor: Colors.blue,
-                          readOnly:true,
-                          onTap:()=> _addUserPageController.pickImage(),
+                          readOnly: true,
+                          onTap: () => _addUserPageController.pickImage(),
                           // keyboardType: TextInputType.number,
                           // inputFormatters: [
                           //   FilteringTextInputFormatter.digitsOnly,

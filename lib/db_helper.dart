@@ -1,12 +1,14 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLHelper {
   ///Creates a table named students
   static Future<void> createTables(sql.Database database, int version) async {
     await database.execute(
-        '''CREATE TABLE MEMBERS (MEMBERID INTEGER PRIMARY KEY AUTOINCREMENT ,MEMBERNAME TEXT,MEMBERMOBILE TEXT,MEMBEREMAIL TEXT,GEOLAT TEXT,GEOLONG TEXT)''');
+        '''CREATE TABLE MEMBERS (MEMBERID INTEGER PRIMARY KEY AUTOINCREMENT ,MEMBERNAME TEXT,MEMBERMOBILE TEXT,MEMBEREMAIL TEXT,ADDRESS TEXT,GEOLAT TEXT,GEOLONG TEXT,IMAGE TEXT)''');
   }
 
   static Future<sql.Database> db() async {
@@ -21,21 +23,24 @@ class SQLHelper {
       {required String name,
       required String mobile,
       required String email,
+      required String address,
       required String lat,
-      required String long}) async {
+      required String long,
+      required File image}) async {
     final db = await SQLHelper.db();
     // db.delete('TouristplaceMst');
     var id = await db.insert('MEMBERS', {
-      'MEMBERID':null,
+      'MEMBERID': null,
       'MEMBERNAME': '$name',
       'MEMBERMOBILE': '$mobile',
       'MEMBEREMAIL': '$email',
+      'ADDRESS': '$address',
       'GEOLAT': '$lat',
       'GEOLONG': '$long',
+      'IMAGE': base64Encode(image.readAsBytesSync())
     });
 
     log('Id $id dbs: ${await db.query('MEMBERS')}');
-    await saveImage(id);
   }
 
   static Future<List<Map<String, Object?>>> getAllUsers() async {
@@ -53,8 +58,6 @@ class SQLHelper {
     final db = await SQLHelper.db();
     db.delete('MEMBERS');
   }
-
-  static saveImage(int id) {}
 }
 // Future<void> download(String url) async {
 //
